@@ -1,0 +1,10 @@
+KW:  int 
+KW:  main 
+PUN:  ( 
+PUN:  ) 
+PUN:  { 
+Char lit:  a 
+OP:  = 
+IntLit:  10 
+PUN:  ; 
+PUN:  } 

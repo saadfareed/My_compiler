@@ -1,0 +1,57 @@
+%{
+#include<stdio.h>
+#include<string.h> 
+char line[100]; 
+int no_of_line= 0;
+%}
+del [ \t\n]
+let [a-zA-Z]
+digit [0-9]
+underscore [_]
+%%
+[\n] { no_of_line++;}
+{del}+ {}
+("int"|"float"|"double"|"char"|"if"|"while"|"for"|"break"|"switch"|"case"|"main"|"cout") {fprintf(yyout,"KW:  %s \n",yytext);}
+"<="		{fprintf(yyout,"OP:  %s \n",yytext); }
+">"			{fprintf(yyout,"OP:  %s \n",yytext); }
+"<"			{fprintf(yyout,"OP:  %s \n",yytext); }
+"=="		{fprintf(yyout,"OP:  %s \n",yytext); }	
+"="			{fprintf(yyout,"OP:  %s \n",yytext); }
+"*"			{fprintf(yyout,"OP:  %s \n",yytext); }
+"+"			{fprintf(yyout,"OP:  %s \n",yytext); }
+"/"			{fprintf(yyout,"OP:  %s \n",yytext); }
+"-"			{fprintf(yyout,"OP:  %s \n",yytext); }
+"++"		{fprintf(yyout,"OP:  %s \n",yytext); }
+"--"		{fprintf(yyout,"OP:  %s \n",yytext); }
+"!"			{fprintf(yyout,"OP:  %s \n",yytext); }
+"&"         {fprintf(yyout,"OP:  %s \n",yytext); }
+"["			{fprintf(yyout,"PUN:  %s \n",yytext); }
+"{"			{fprintf(yyout,"PUN:  %s \n",yytext); }
+"("			{fprintf(yyout,"PUN:  %s \n",yytext); }
+")"			{fprintf(yyout,"PUN:  %s \n",yytext); }
+"}"			{fprintf(yyout,"PUN:  %s \n",yytext); }
+"]"			{fprintf(yyout,"PUN:  %s \n",yytext); }
+";"			{fprintf(yyout,"PUN:  %s \n",yytext); }
+","			{fprintf(yyout,"PUN:  %s \n",yytext); }
+{let}					{fprintf(yyout,"Char lit:  %s \n",yytext); }
+{let}({let}|{digit}|{underscore})*  {fprintf(yyout,"ID:  %s \n",yytext); }
+"/*"({digit}|{let}|{del}|{underscore})*"*/"   {fprintf(yyout,"MultilineComments:  %s \n",yytext); }
+("\""({digit}|{let}|{del}|{underscore})*"\"")       {fprintf(yyout,"String Literal:  %s \n",yytext); }
+({digit}+"."{digit}+)	{fprintf(yyout,"Float lit:  %s \n",yytext); }
+({digit})+  {fprintf(yyout,"IntLit:  %s \n",yytext); }
+"//"({let}|{digit}|{underscore})*   {fprintf(yyout,"SinglelineComments:  %s \n",yytext); }
+. {fprintf(yyout," : %s ..........ERROR..... occured at line no: %d\n",yytext,no_of_line);}
+
+%%
+
+int yywrap(void){return 1;}
+
+int main()
+{
+        extern FILE *yyin;
+	extern FILE *yyout; 
+	yyin=fopen("input.txt","r");  
+        yyout=fopen("output.txt","w");
+        yylex();
+        printf("....................................................");
+}
